@@ -1,3 +1,0 @@
-binance_api_key_out = 'LckVzPvURLIQ0t0rT8h9fxfhkUk9nmix8pIPnMsQwksbEW3SjXDVFaHpnSp5W6ZF'
-binance_api_secret_out = 'go74zTOnFiJQIEd3PM0H09kK10W0nPIfPFWD4OT95xDv48GnJlczLFKmGffD2O1O'
-
