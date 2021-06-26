@@ -39,7 +39,7 @@ def download_db(symbols, klines):
 def sleep_time():
     sleep_min = round((math.ceil(dt.datetime.now().minute / 30) - dt.datetime.now().minute / 30) * 30)
     if sleep_min > 1:
-        time.sleep((sleep_min - 1.7) * 60)
+        time.sleep((sleep_min - 1) * 60)
         print('DONE SLEEPING')
 
 
@@ -114,7 +114,6 @@ class BollBOT:
         max_klines = self.db.timestamp.max()
 
         last_klines = self.db.loc[self.db['timestamp'] == max_klines].copy()
-        # print(last_klines.__len__())
         last_klines.loc[(last_klines['bbh_ind'] == 1) & (last_klines['RSI'] > self.rsi_limits[1]), 'side'] = -1
         last_klines.loc[(last_klines['bbl_ind'] == 1) & (last_klines['RSI'] < self.rsi_limits[0]), 'side'] = 1
         last_klines.dropna(inplace=True)
@@ -148,7 +147,7 @@ symbol_list = [x for x in symbol_list if not x == '1000SHIBUSDT']
 symbol_list = [x for x in symbol_list if not x == 'BTCSTUSDT']
 klines = '30m'
 
-rsi_limit = [30, 78]
+rsi_limit = [25, 78]
 
 max_in = 1
 
