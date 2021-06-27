@@ -39,8 +39,8 @@ def download_db(symbols, klines):
 def sleep_time():
     sleep_min = round((math.ceil(dt.datetime.now().minute / 30) - dt.datetime.now().minute / 30) * 30)
     if sleep_min > 1:
-        time.sleep((sleep_min - 1) * 60)
-        print('DONE SLEEPING')
+        time.sleep((sleep_min - 0.8) * 60)
+        # print('DONE SLEEPING')
 
 
 def correct_db(data_db):
@@ -105,8 +105,8 @@ class BollBOT:
                 if self.to_trade.__len__() != 0:
                     for symbol in self.to_trade.keys():
                         tlg.send_message(message('BINANCE FUTURES', symbol, round(self.to_trade[symbol]['RSI']),2))
-                else:
-                    print('NO COINS')
+                # else:
+                #     print('NO COINS')
                 self.historic = False
 
     def triggered_symbols(self):
