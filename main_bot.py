@@ -104,7 +104,7 @@ class BollBOT:
                 self.to_trade = self.triggered_symbols()
                 if self.to_trade.__len__() != 0:
                     for symbol in self.to_trade.keys():
-                        tlg.send_message(message('BINANCE FUTURES', symbol, self.to_trade[symbol]['RSI']))
+                        tlg.send_message(message('BINANCE FUTURES', symbol, round(self.to_trade[symbol]['RSI']),2))
                 else:
                     print('NO COINS')
                 self.historic = False
@@ -147,7 +147,7 @@ symbol_list = [x for x in symbol_list if not x == '1000SHIBUSDT']
 symbol_list = [x for x in symbol_list if not x == 'BTCSTUSDT']
 klines = '30m'
 
-rsi_limit = [25, 78]
+rsi_limit = [20, 80]
 
 max_in = 1
 
