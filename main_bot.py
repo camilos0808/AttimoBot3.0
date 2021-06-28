@@ -81,7 +81,7 @@ def message(exchange, symbol, rsi, price, price_bool=False):
           'implícita, directa o indirecta, por los daños producidos por el uso de la información suministrada en este ' \
           'mensaje, ' \
           'así como en las conferencias, eventos, charlas, sesiones de consultoría y/o similares organizados y/o ' \
-          'brindados. perseguimos fines únicamente educativos. La información y los ejemplos brindados en esta página ' \
+          'brindados. Perseguimos fines únicamente educativos. La información y los ejemplos brindados en esta página ' \
           'no deben interpretarse como una promesa o garantía de ganancias. '
 
     # pst = '*Descargo de responsabilidad* \n  Tenga en cuenta que soy propietario de una cartera diversificada, ' \
