@@ -71,6 +71,8 @@ def message(exchange, symbol, rsi):
     msg += 'RSI: *{}* --> ${}\n'.format(rsi, symbol)
 
     return msg
+
+
 '''
 CLASSES
 '''
@@ -104,7 +106,7 @@ class BollBOT:
                 self.to_trade = self.triggered_symbols()
                 if self.to_trade.__len__() != 0:
                     for symbol in self.to_trade.keys():
-                        tlg.send_message(message('BINANCE FUTURES', symbol, round(self.to_trade[symbol]['RSI']),2))
+                        tlg.send_message(message('BINANCE FUTURES', symbol, round(self.to_trade[symbol]['RSI'], 2)))
                 # else:
                 #     print('NO COINS')
                 self.historic = False
