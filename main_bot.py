@@ -57,18 +57,46 @@ def correct_db(data_db):
     return combine
 
 
-def message(exchange, symbol, rsi):
+def message(exchange, symbol, rsi, price, price_bool=False):
     msg = '📢️ *ALERTA*\n ----------------------------\n'
-    wallet = 'Las siguientes criptomonedas en *BINANCE {}* presentan un volumen que ha activado una alerta ' \
-             'de _RSI_. *Operar con precaución*:\n\n'.format(exchange)
-    msg = msg + wallet
+
+    msg += 'Oportunidad en *{}*:\n\n'.format(exchange)
 
     if rsi < 50:
-        msg += '*Oportunidad de Largo*\n'
+        tipo = '📈 LARGO'
     else:
-        msg += '*Oportunidad de Corto*\n'
+        tipo = '📉 CORTO'
 
-    msg += 'RSI: *{}* --> ${}\n'.format(rsi, symbol)
+    if price_bool:
+        wallet = 'Moneda: ${}\nTipo: {}\nPrecio Referencia: {}\n\n'.format(symbol, tipo, price)
+    else:
+        wallet = 'Moneda: ${}\nTipo: {}\n\n'.format(symbol, tipo)
+
+    msg = msg + wallet
+
+    msg += 'Recuerda *Operar con precaución*. El mercado de las criptomonedas puede llegar a ser muy volatil. Controla ' \
+           'tu riesgo con un STOP LOSS. \n\n '
+
+    pst = '*Disclaimer:* \nAttimoBOT no asume responsabilidad alguna, explícita o ' \
+          'implícita, directa o indirecta, por los daños producidos por el uso de la información suministrada en este ' \
+          'mensaje, ' \
+          'así como en las conferencias, eventos, charlas, sesiones de consultoría y/o similares organizados y/o ' \
+          'brindados. perseguimos fines únicamente educativos. La información y los ejemplos brindados en esta página ' \
+          'no deben interpretarse como una promesa o garantía de ganancias. '
+
+    # pst = '*Descargo de responsabilidad* \n  Tenga en cuenta que soy propietario de una cartera diversificada, ' \
+    #       'ya que deseo ser transparente e imparcial para la comunidad de AttimoCrypto en todo momento y, ' \
+    #       'por lo tanto, el contenido de mis medios está destinado A FINES DE INFORMACIÓN GENERAL. La información ' \
+    #       'aquí contenida es solo para fines informativos. Nada del contenido de dicho canal y/o respuestas en ' \
+    #       'comentarios se interpretará como asesoramiento financiero, legal o fiscal. El tema tratado en cada video ' \
+    #       'es únicamente la opinión subjetiva del orador que no es un asesor financiero con licencia o un asesor de ' \
+    #       'inversiones registrado. La compra de criptomonedas, operar en el mercado financiero plantea un riesgo ' \
+    #       'considerable de pérdida. El orador no garantiza ni se responsabiliza por ningún resultado en particular. ' \
+    #       'El rendimiento pasado no indica resultados futuros. Esta información es la que se encuentra públicamente ' \
+    #       'en Internet. Toda la información está destinada a la conciencia pública y es de dominio público. Puede ' \
+    #       'tomar estos datos y argumentos y hacer su propia investigación. '
+
+    msg += pst
 
     return msg
 
@@ -81,7 +109,8 @@ CLASSES
 class BollBOT:
     INIT = os.path.join(pathlib.Path().absolute())
 
-    def __init__(self, klines, symbol_list, rsi_limits, max_in, long=True, short=True):
+    def __init__(self, klines, symbol_list, rsi_limits, max_in, price_bool=False, long=True, short=True):
+        self.price_bool = price_bool
         self.klines = klines
         self.symbol_list = symbol_list
         self.to_trade = {}
@@ -106,7 +135,11 @@ class BollBOT:
                 self.to_trade = self.triggered_symbols()
                 if self.to_trade.__len__() != 0:
                     for symbol in self.to_trade.keys():
-                        tlg.send_message(message('BINANCE FUTURES', symbol, round(self.to_trade[symbol]['RSI'], 2)))
+                        tlg.send_message(message('BINANCE FUTURES',
+                                                 symbol,
+                                                 self.to_trade[symbol]['RSI'],
+                                                 self.to_trade[symbol]['price'],
+                                                 self.price_bool))
                 # else:
                 #     print('NO COINS')
                 self.historic = False
@@ -132,7 +165,8 @@ class BollBOT:
 
         for index, row in last_klines.iterrows():
             symbols[row.symbol] = {
-                'RSI': row.RSI
+                'RSI': row.RSI,
+                'price': row.close,
             }
 
         return symbols
@@ -147,11 +181,13 @@ symbol_list = [x for x in symbol_list if x.endswith('USDT')]
 symbol_list = [x for x in symbol_list if not x == 'DOGEUSDT']
 symbol_list = [x for x in symbol_list if not x == '1000SHIBUSDT']
 symbol_list = [x for x in symbol_list if not x == 'BTCSTUSDT']
+symbol_list = [x for x in symbol_list if not x == 'BTCDOMUSDT']
 klines = '30m'
 
 rsi_limit = [20, 80]
 
 max_in = 1
+price_bool = True
 
-instance = BollBOT(klines, symbol_list, rsi_limit, 1)
+instance = BollBOT(klines, symbol_list, rsi_limit, 1, price_bool)
 instance.init()
