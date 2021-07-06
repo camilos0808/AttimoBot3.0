@@ -121,18 +121,20 @@ class BollBOT:
         self.short = short
         self.sl_activation = False
         self.db = download_db(symbol_list, self.klines)
+        # sleep_time()
 
     def init(self):
         while True:
             actual_minute = dt.datetime.now().minute
-            if not self.historic and actual_minute not in [0, 30]:
+            if not self.historic: # and actual_minute not in [0, 30]:
                 self.db = download_db(self.symbol_list, self.klines)
                 self.historic = True
-                sleep_time()
-            elif self.historic and actual_minute in [0, 30]:
+                # sleep_time()
+            elif self.historic: # and actual_minute in [0, 30]:
                 self.db = correct_db(self.db)
                 self.db = calculator(self.db)
                 self.to_trade = self.triggered_symbols()
+                print(self.to_trade.__len__())
                 if self.to_trade.__len__() != 0:
                     for symbol in self.to_trade.keys():
                         tlg.send_message(message('BINANCE FUTURES',
