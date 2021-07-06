@@ -186,7 +186,7 @@ symbol_list = [x for x in symbol_list if not x == 'BTCSTUSDT']
 symbol_list = [x for x in symbol_list if not x == 'BTCDOMUSDT']
 klines = '30m'
 
-rsi_limit = [21, 79]
+rsi_limit = [20, 80]
 
 max_in = 1
 price_bool = True
