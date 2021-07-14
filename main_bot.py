@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import os
 import pathlib
+import json
 
 '''
 AUXILIARY METHODS
@@ -120,7 +121,9 @@ class BollBOT:
         self.long = long
         self.short = short
         self.sl_activation = False
+        self.trade_dir = os.path.join(BollBOT.INIT, 'calls.json')
         self.db = download_db(symbol_list, self.klines)
+        self.calls = self.load()
         sleep_time()
 
     def init(self):
@@ -134,7 +137,6 @@ class BollBOT:
                 self.db = correct_db(self.db)
                 self.db = calculator(self.db)
                 self.to_trade = self.triggered_symbols()
-                print(self.to_trade.__len__())
                 if self.to_trade.__len__() != 0:
                     for symbol in self.to_trade.keys():
                         tlg.send_message(message('BINANCE FUTURES',
@@ -142,6 +144,8 @@ class BollBOT:
                                                  self.to_trade[symbol]['RSI'],
                                                  self.to_trade[symbol]['price'],
                                                  self.price_bool))
+                        self.add(symbol)
+                        self.save()
                 # else:
                 #     print('NO COINS')
                 self.historic = False
@@ -172,6 +176,32 @@ class BollBOT:
             }
 
         return symbols
+
+    def save(self):
+        with open(self.trade_dir, 'w') as fp:
+            json.dump(self.calls, fp)
+
+    def load(self):
+        if os.path.exists(self.trade_dir):
+            with open(self.trade_dir, 'r') as fp:
+                data = json.load(fp)
+        else:
+            data = {}
+
+        return data
+
+    def add(self, symbol):
+        if self.calls.__len__() == 5:
+            del self.calls[1]
+            self.calls = {i + 1: v for i, v in enumerate(self.calls.values())}
+            self.calls[self.calls.__len__() + 1] = {
+                'symbol': symbol,
+                'timestamp': dt.datetime.now().isoformat()}
+        else:
+            self.calls[self.calls.__len__() + 1] = {
+                'symbol': symbol,
+                'timestamp': dt.datetime.now().isoformat()}
+        print(self.calls)
 
 
 '''
