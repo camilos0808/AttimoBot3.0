@@ -144,7 +144,7 @@ class BollBOT:
                                                  self.to_trade[symbol]['RSI'],
                                                  self.to_trade[symbol]['price'],
                                                  self.price_bool))
-                        self.add(symbol)
+                        self.add(symbol, self.to_trade[symbol]['RSI'])
                         self.save()
                 # else:
                 #     print('NO COINS')
@@ -190,18 +190,19 @@ class BollBOT:
 
         return data
 
-    def add(self, symbol):
-        if self.calls.__len__() == 5:
+    def add(self, symbol, rsi):
+        if self.calls.__len__() == 15:
             del self.calls[1]
             self.calls = {i + 1: v for i, v in enumerate(self.calls.values())}
             self.calls[self.calls.__len__() + 1] = {
                 'symbol': symbol,
-                'timestamp': dt.datetime.now().isoformat()}
+                'timestamp': dt.datetime.now().isoformat(),
+                'rsi': rsi}
         else:
             self.calls[self.calls.__len__() + 1] = {
                 'symbol': symbol,
-                'timestamp': dt.datetime.now().isoformat()}
-        print(self.calls)
+                'timestamp': dt.datetime.now().isoformat(),
+                'rsi': rsi}
 
 
 '''
