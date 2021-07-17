@@ -192,7 +192,10 @@ class BollBOT:
 
     def add(self, symbol, rsi):
         if self.calls.__len__() == 15:
-            del self.calls[1]
+            try:
+                del self.calls[1]
+            except:
+                del self.calls['1']
             self.calls = {i + 1: v for i, v in enumerate(self.calls.values())}
             self.calls[self.calls.__len__() + 1] = {
                 'symbol': symbol,
