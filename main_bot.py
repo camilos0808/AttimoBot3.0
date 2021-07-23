@@ -156,8 +156,8 @@ class BollBOT:
         max_klines = self.db.timestamp.max()
 
         last_klines = self.db.loc[self.db['timestamp'] == max_klines].copy()
-        last_klines.loc[(last_klines['bbh_ind'] == 1) & (last_klines['RSI'] > self.rsi_limits[1]) & (last_klines['RSI_6'] > 95), 'side'] = -1
-        last_klines.loc[(last_klines['bbl_ind'] == 1) & (last_klines['RSI'] < self.rsi_limits[0]) & (last_klines['RSI_6'] < 7), 'side'] = 1
+        last_klines.loc[(last_klines['bbh_ind'] == 1) & (last_klines['RSI'] > self.rsi_limits[1]) & (last_klines['RSI_6'] > 90), 'side'] = -1
+        last_klines.loc[(last_klines['bbl_ind'] == 1) & (last_klines['RSI'] < self.rsi_limits[0]) & (last_klines['RSI_6'] < 10), 'side'] = 1
         last_klines.dropna(inplace=True)
         if last_klines.__len__() == 0:
             return symbols
