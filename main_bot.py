@@ -17,7 +17,7 @@ AUXILIARY METHODS
 
 def calculator(data):
     data['RSI'] = rsi(data.close)
-    data['RSI_6'] = rsi(data.close, n=6)
+    data['RSI_6'] = rsi(close=data.close, window=6)
     data = data.loc[data['timestamp'] > data['timestamp'].max() - 20 * dt.timedelta(minutes=30)].copy()
     avg = data.close.rolling(20).mean()
     std = data.close.rolling(20).apply(np.std)
