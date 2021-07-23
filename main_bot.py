@@ -17,6 +17,7 @@ AUXILIARY METHODS
 
 def calculator(data):
     data['RSI'] = rsi(data.close)
+    data['RSI_6'] = rsi(data.close, n=6)
     data = data.loc[data['timestamp'] > data['timestamp'].max() - 20 * dt.timedelta(minutes=30)].copy()
     avg = data.close.rolling(20).mean()
     std = data.close.rolling(20).apply(np.std)
@@ -155,8 +156,8 @@ class BollBOT:
         max_klines = self.db.timestamp.max()
 
         last_klines = self.db.loc[self.db['timestamp'] == max_klines].copy()
-        last_klines.loc[(last_klines['bbh_ind'] == 1) & (last_klines['RSI'] > self.rsi_limits[1]), 'side'] = -1
-        last_klines.loc[(last_klines['bbl_ind'] == 1) & (last_klines['RSI'] < self.rsi_limits[0]), 'side'] = 1
+        last_klines.loc[(last_klines['bbh_ind'] == 1) & (last_klines['RSI'] > self.rsi_limits[1]) & (last_klines['RSI_6'] > 95), 'side'] = -1
+        last_klines.loc[(last_klines['bbl_ind'] == 1) & (last_klines['RSI'] < self.rsi_limits[0]) & (last_klines['RSI_6'] < 7), 'side'] = 1
         last_klines.dropna(inplace=True)
         if last_klines.__len__() == 0:
             return symbols
@@ -220,7 +221,7 @@ symbol_list = [x for x in symbol_list if not x == 'BTCSTUSDT']
 symbol_list = [x for x in symbol_list if not x == 'BTCDOMUSDT']
 klines = '30m'
 
-rsi_limit = [20, 80]
+rsi_limit = [19, 83]
 
 max_in = 1
 price_bool = True
